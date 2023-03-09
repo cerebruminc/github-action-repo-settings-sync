@@ -1,74 +1,78 @@
-name: 'Repo Settings Sync'
-description: 'Github Action to setup repository settings'
-author: 'kbrashears5'
+name: "Repo Settings Sync"
+description: "Github Action to setup repository settings"
+author: "kbrashears5"
 branding:
-  icon: 'upload-cloud'
-  color: 'purple'
+  icon: "upload-cloud"
+  color: "purple"
 inputs:
   REPOSITORIES:
-    description: 'Github repositories to setup. Default will get all public repositories for your username'
+    description: "Github repositories to setup. Default will get all public repositories for your username"
     required: false
-    default: 'ALL'
+    default: "ALL"
   ALLOW_ISSUES:
-    description: 'Whether or not to allow issues on the repo'
+    description: "Whether or not to allow issues on the repo"
     required: false
-    default: 'true'
+    default: "true"
   ALLOW_PROJECTS:
-    description: 'Whether or not to allow projects on the repo'
+    description: "Whether or not to allow projects on the repo"
     required: false
-    default: 'true'
+    default: "true"
   ALLOW_WIKI:
-    description: 'Whether or not to allow wiki on the repo'
+    description: "Whether or not to allow wiki on the repo"
     required: false
-    default: 'true'
+    default: "true"
   SQUASH_MERGE:
-    description: 'Whether or not to allow squash merges on the repo'
+    description: "Whether or not to allow squash merges on the repo"
     required: false
-    default: 'true'
+    default: "true"
   MERGE_COMMIT:
-    description: 'Whether or not to allow merge commits on the repo'
+    description: "Whether or not to allow merge commits on the repo"
     required: false
-    default: 'true'
+    default: "true"
   REBASE_MERGE:
-    description: 'Whether or not to allow rebase merges on the repo'
+    description: "Whether or not to allow rebase merges on the repo"
     required: false
-    default: 'true'
+    default: "true"
   AUTO_MERGE:
-    description: 'Whether or not to allow auto-merge on the repo'
+    description: "Whether or not to allow auto-merge on the repo"
     required: false
-    default: 'false'
+    default: "false"
   DELETE_HEAD:
-    description: 'Whether or not to delete head branch after merges'
+    description: "Whether or not to delete head branch after merges"
     required: false
-    default: 'false'
+    default: "false"
   BRANCH_PROTECTION_ENABLED:
-    description: 'Whether or not to enable branch protection'
+    description: "Whether or not to enable branch protection"
     required: false
-    default: 'false'
+    default: "false"
   BRANCH_PROTECTION_NAME:
-    description: 'Branch name pattern for branch protection rule'
+    description: "Branch name pattern for branch protection rule"
     required: false
-    default: 'main'
+    default: "main"
   BRANCH_PROTECTION_REQUIRED_REVIEWERS:
-    description: 'Number of required reviewers for branch protection rule'
+    description: "Number of required reviewers for branch protection rule"
     required: false
-    default: '1'
+    default: "1"
   BRANCH_PROTECTION_DISMISS:
-    description: 'Dismiss stale pull request approvals when new commits are pushed'
+    description: "Dismiss stale pull request approvals when new commits are pushed"
     required: false
-    default: 'true'
+    default: "true"
   BRANCH_PROTECTION_CODE_OWNERS:
-    description: 'Require review from Code Owners'
+    description: "Require review from Code Owners"
     required: false
-    default: 'true'
+    default: "true"
   BRANCH_PROTECTION_ENFORCE_ADMINS:
-    description: 'Enforce branch protection rules for repo admins'
+    description: "Enforce branch protection rules for repo admins"
     required: false
-    default: 'false'
+    default: "false"
+  BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED:
+    description: "The team who can push to matching branches"
+    required: false
+    default: "cerebruminc/maintainers"
   TOKEN:
-    description: 'Personal access token with Repo privileges'
+    description: "Personal access token with Repo privileges"
     required: true
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"

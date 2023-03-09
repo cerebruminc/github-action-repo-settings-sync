@@ -45,6 +45,8 @@ BRANCH_PROTECTION_CODE_OWNERS=$INPUT_BRANCH_PROTECTION_CODE_OWNERS
 echo "BP: Code Owners        : $BRANCH_PROTECTION_CODE_OWNERS"
 BRANCH_PROTECTION_ENFORCE_ADMINS=$INPUT_BRANCH_PROTECTION_ENFORCE_ADMINS
 echo "BP: Enforce Admins     : $BRANCH_PROTECTION_ENFORCE_ADMINS"
+BRANCH_PROTECTION_RESTRICT_PUSHES=$BRANCH_PROTECTION_RESTRICT_PUSHES
+echo "BP: Restrict Pushes    : $BRANCH_PROTECTION_RESTRICT_PUSHES"
 GITHUB_TOKEN="$INPUT_TOKEN"
 echo "---------------------------------------------"
 
@@ -136,6 +138,7 @@ for repository in "${REPOSITORIES[@]}"; do
         --argjson dismissStaleReviews $BRANCH_PROTECTION_DISMISS \
         --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
         --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
+        --argjson restrictPushesTeamAllowed $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED \
         '{
             required_status_checks:null,
             enforce_admins:$enforceAdmins,
@@ -144,7 +147,9 @@ for repository in "${REPOSITORIES[@]}"; do
                 require_code_owner_reviews:$codeOwnerReviews,
                 required_approving_review_count:$reviewCount
             },
-            restrictions:null
+            restrictions:{
+                teams:$restrictPushesTeamAllowed,
+            }
         }' \
         | curl -d @- \
             -X PUT \
