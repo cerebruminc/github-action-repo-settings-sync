@@ -68,7 +68,7 @@ inputs:
   BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED:
     description: "The team who can push to matching branches"
     required: false
-    default: "cerebruminc/maintainers"
+    default: "YOURTEAMHERE"
   TOKEN:
     description: "Personal access token with Repo privileges"
     required: true
