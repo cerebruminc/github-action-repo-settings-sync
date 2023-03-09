@@ -138,6 +138,7 @@ for repository in "${REPOSITORIES[@]}"; do
         --argjson dismissStaleReviews $BRANCH_PROTECTION_DISMISS \
         --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
         --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
+        --arg restrictPushesTeamAllowed $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED \
         '{
             required_status_checks:null,
             enforce_admins:$enforceAdmins,
