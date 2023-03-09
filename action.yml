@@ -1,6 +1,6 @@
-name: "Repo Settings Sync"
+name: "Repo Settings Sync - Cerebrum"
 description: "Github Action to setup repository settings"
-author: "kbrashears5"
+author: "cerebruminc"
 branding:
   icon: "upload-cloud"
   color: "purple"
