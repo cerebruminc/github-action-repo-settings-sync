@@ -148,6 +148,8 @@ for repository in "${REPOSITORIES[@]}"; do
                 required_approving_review_count:$reviewCount
             },
             restrictions:{
+                users:null,
+                apps:null,
                 teams:[$restrictPushesTeamAllowed]
             }
         }' \
