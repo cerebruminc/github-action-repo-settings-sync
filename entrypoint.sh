@@ -149,6 +149,7 @@ for repository in "${REPOSITORIES[@]}"; do
             },
             restrictions:{
                 users:[""],
+                apps:null,
                 teams:[$restrictPushesTeamAllowed]
             }
         }' \
@@ -157,7 +158,7 @@ for repository in "${REPOSITORIES[@]}"; do
             -H "Accept: application/vnd.github.luke-cage-preview+json" \
             -H "Content-Type: application/json" \
             -u ${USERNAME}:${GITHUB_TOKEN} \
-            --silent \
+            --verbose \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
     elif [ "$BRANCH_PROTECTION_ENABLED" == "false" ]; then
         curl \
