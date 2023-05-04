@@ -160,6 +160,23 @@ for repository in "${REPOSITORIES[@]}"; do
             -u ${USERNAME}:${GITHUB_TOKEN} \
             --silent \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
+        
+        curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -u ${USERNAME}:${GITHUB_TOKEN} \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            --silent \
+            https://api.github.com/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/enforce_admins
+
+        curl -L \
+            -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -u ${USERNAME}:${GITHUB_TOKEN}\
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks \
+            -d '{"strict":true}'
+
     elif [ "$BRANCH_PROTECTION_ENABLED" == "false" ]; then
         curl \
             -X DELETE \
@@ -168,6 +185,22 @@ for repository in "${REPOSITORIES[@]}"; do
             -u ${USERNAME}:${GITHUB_TOKEN} \
             --silent \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
+
+        curl -L \
+            -X DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -u ${USERNAME}:${GITHUB_TOKEN} \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            --silent \
+            https://api.github.com/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/enforce_admins
+
+        curl -L \
+            -X DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -u ${USERNAME}:${GITHUB_TOKEN}\
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks
+
     fi
 
     echo "Completed [${repository}]"
