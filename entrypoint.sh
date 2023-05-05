@@ -16,37 +16,39 @@ echo "Inputs"
 echo "---------------------------------------------"
 RAW_REPOSITORIES="$INPUT_REPOSITORIES"
 REPOSITORIES=($RAW_REPOSITORIES)
-echo "Repositories           : $REPOSITORIES"
+echo "Repositories             : $REPOSITORIES"
 ALLOW_ISSUES=$INPUT_ALLOW_ISSUES
-echo "Allow Issues           : $ALLOW_ISSUES"
+echo "Allow Issues             : $ALLOW_ISSUES"
 ALLOW_PROJECTS=$INPUT_ALLOW_PROJECTS
-echo "Allow Projects         : $ALLOW_PROJECTS"
+echo "Allow Projects           : $ALLOW_PROJECTS"
 ALLOW_WIKI=$INPUT_ALLOW_WIKI
-echo "Allow Wiki             : $ALLOW_WIKI"
+echo "Allow Wiki               : $ALLOW_WIKI"
 SQUASH_MERGE=$INPUT_SQUASH_MERGE
-echo "Squash Merge           : $SQUASH_MERGE"
+echo "Squash Merge             : $SQUASH_MERGE"
 MERGE_COMMIT=$INPUT_MERGE_COMMIT
-echo "Merge Commit           : $MERGE_COMMIT"
+echo "Merge Commit             : $MERGE_COMMIT"
 REBASE_MERGE=$INPUT_REBASE_MERGE
-echo "Rebase Merge           : $REBASE_MERGE"
+echo "Rebase Merge             : $REBASE_MERGE"
 AUTO_MERGE=$INPUT_AUTO_MERGE
-echo "Auto-Merge             : $AUTO_MERGE"
+echo "Auto-Merge               : $AUTO_MERGE"
 DELETE_HEAD=$INPUT_DELETE_HEAD
-echo "Delete Head            : $DELETE_HEAD"
+echo "Delete Head              : $DELETE_HEAD"
 BRANCH_PROTECTION_ENABLED=$INPUT_BRANCH_PROTECTION_ENABLED
-echo "Branch Protection (BP) : $BRANCH_PROTECTION_ENABLED"
+echo "Branch Protection (BP)   : $BRANCH_PROTECTION_ENABLED"
 BRANCH_PROTECTION_NAME=$INPUT_BRANCH_PROTECTION_NAME
-echo "BP: Name               : $BRANCH_PROTECTION_NAME"
+echo "BP: Name                 : $BRANCH_PROTECTION_NAME"
 BRANCH_PROTECTION_REQUIRED_REVIEWERS=$INPUT_BRANCH_PROTECTION_REQUIRED_REVIEWERS
-echo "BP: Required Reviewers : $BRANCH_PROTECTION_REQUIRED_REVIEWERS"
+echo "BP: Required Reviewers   : $BRANCH_PROTECTION_REQUIRED_REVIEWERS"
 BRANCH_PROTECTION_DISMISS=$INPUT_BRANCH_PROTECTION_DISMISS
-echo "BP: Dismiss Stale      : $BRANCH_PROTECTION_DISMISS"
+echo "BP: Dismiss Stale        : $BRANCH_PROTECTION_DISMISS"
 BRANCH_PROTECTION_CODE_OWNERS=$INPUT_BRANCH_PROTECTION_CODE_OWNERS
-echo "BP: Code Owners        : $BRANCH_PROTECTION_CODE_OWNERS"
+echo "BP: Code Owners          : $BRANCH_PROTECTION_CODE_OWNERS"
 BRANCH_PROTECTION_ENFORCE_ADMINS=$INPUT_BRANCH_PROTECTION_ENFORCE_ADMINS
-echo "BP: Enforce Admins     : $BRANCH_PROTECTION_ENFORCE_ADMINS"
+echo "BP: Enforce Admins       : $BRANCH_PROTECTION_ENFORCE_ADMINS"
+BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS=$INPUT_BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS
+echo "BP: Require Status Checks: $BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS"
 BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED=$INPUT_BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED
-echo "BP: Team Allowed       : $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED"
+echo "BP: Team Allowed         : $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED"
 GITHUB_TOKEN="$INPUT_TOKEN"
 echo "---------------------------------------------"
 
@@ -138,9 +140,16 @@ for repository in "${REPOSITORIES[@]}"; do
         --argjson dismissStaleReviews $BRANCH_PROTECTION_DISMISS \
         --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
         --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
+        --argjson requiredStatusChecks $BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS \
         --arg restrictPushesTeamAllowed $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED \
         '{
-            required_status_checks:null,
+            required_status_checks:{
+                strict: $requiredStatusChecks,
+                checks: [{
+                    context: "",
+                    app_id: -1
+                }]
+            },
             enforce_admins:$enforceAdmins,
             required_pull_request_reviews:{
                 dismiss_stale_reviews:$dismissStaleReviews,
@@ -160,15 +169,6 @@ for repository in "${REPOSITORIES[@]}"; do
             -u ${USERNAME}:${GITHUB_TOKEN} \
             --silent \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
-
-        curl -L \
-            -X PATCH \
-            -H "Accept: application/vnd.github+json" \
-            -u ${USERNAME}:${GITHUB_TOKEN}\
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks \
-            -d '{"strict":true, "checks": [{"context": "", "app_id": -1}]}'
-
     elif [ "$BRANCH_PROTECTION_ENABLED" == "false" ]; then
         curl \
             -X DELETE \
@@ -177,14 +177,6 @@ for repository in "${REPOSITORIES[@]}"; do
             -u ${USERNAME}:${GITHUB_TOKEN} \
             --silent \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
-
-        curl -L \
-            -X DELETE \
-            -H "Accept: application/vnd.github+json" \
-            -u ${USERNAME}:${GITHUB_TOKEN}\
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks
-
     fi
 
     echo "Completed [${repository}]"
