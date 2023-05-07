@@ -146,7 +146,7 @@ for repository in "${REPOSITORIES[@]}"; do
             required_status_checks:{
                 strict: $requiredStatusChecks,
                 checks: [{
-                    context: "tests",
+                    context: "",
                     app_id: -1
                 }]
             },
