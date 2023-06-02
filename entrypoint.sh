@@ -145,7 +145,6 @@ for repository in "${REPOSITORIES[@]}"; do
         '{
             required_status_checks:{
                 strict: $requiredStatusChecks,
-                checks: []
             },
             enforce_admins:$enforceAdmins,
             required_pull_request_reviews:{
