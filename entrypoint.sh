@@ -133,6 +133,14 @@ for repository in "${REPOSITORIES[@]}"; do
 
     if [ "$BRANCH_PROTECTION_ENABLED" == "true" ]; then
         echo "Setting [${BRANCH_PROTECTION_NAME}] branch protection rules"
+
+        # get the existing branch protection rules, as we want to keep them the same
+        REQUIRED_STATUS_CHECKS=$(curl -H "Accept: application/vnd.github.luke-cage-preview+json" \
+            -H "Content-Type: application/json" \
+            -u ${USERNAME}:${GITHUB_TOKEN} \
+            ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks)
+
+        EXISTING_CHECKS=$(echo "$required_status_checks" | jq -c '.checks')
         
         # the argjson instead of just arg lets us pass the values not as strings
         jq -n \
@@ -141,10 +149,12 @@ for repository in "${REPOSITORIES[@]}"; do
         --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
         --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
         --argjson requiredStatusChecks $BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS \
+        --argjson existingChecks "$EXISTING_CHECKS" \
         --arg restrictPushesTeamAllowed $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED \
         '{
             required_status_checks:{
                 strict: $requiredStatusChecks,
+                checks: $existingChecks
             },
             enforce_admins:$enforceAdmins,
             required_pull_request_reviews:{
