@@ -140,6 +140,8 @@ for repository in "${REPOSITORIES[@]}"; do
             -u ${USERNAME}:${GITHUB_TOKEN} \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks)
 
+        echo $REQUIRED_STATUS_CHECKS
+
         EXISTING_CHECKS=$(echo "$required_status_checks" | jq -c '.checks')
         
         # the argjson instead of just arg lets us pass the values not as strings
