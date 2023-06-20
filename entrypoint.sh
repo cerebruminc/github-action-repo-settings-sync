@@ -142,7 +142,7 @@ for repository in "${REPOSITORIES[@]}"; do
 
         echo "$REQUIRED_STATUS_CHECKS"
 
-        EXISTING_CHECKS=$(echo "$required_status_checks" | jq -rc '.checks')
+        EXISTING_CHECKS=$(echo "$REQUIRED_STATUS_CHECKS" | jq -rc '.checks')
 
         echo "$EXISTING_CHECKS"
         
