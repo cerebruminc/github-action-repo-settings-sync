@@ -151,7 +151,7 @@ for repository in "${REPOSITORIES[@]}"; do
         --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
         --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
         --argjson requiredStatusChecks $BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS \
-        --argjson existingChecks "$EXISTING_CHECKS" \
+        --argjson existingChecks $EXISTING_CHECKS \
         --arg restrictPushesTeamAllowed $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED \
         '{
             required_status_checks:{
