@@ -142,7 +142,7 @@ for repository in "${REPOSITORIES[@]}"; do
 
         echo $REQUIRED_STATUS_CHECKS
 
-        EXISTING_CHECKS=$(echo "$required_status_checks" | jq -c '.checks')
+        EXISTING_CHECKS=$(echo '$required_status_checks' | jq -c '.checks')
         
         # the argjson instead of just arg lets us pass the values not as strings
         jq -n \
