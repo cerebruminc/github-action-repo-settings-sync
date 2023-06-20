@@ -140,9 +140,11 @@ for repository in "${REPOSITORIES[@]}"; do
             -u ${USERNAME}:${GITHUB_TOKEN} \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks)
 
-        echo $REQUIRED_STATUS_CHECKS
+        echo "$REQUIRED_STATUS_CHECKS"
 
-        EXISTING_CHECKS=$(echo '$required_status_checks' | jq -c '.checks')
+        EXISTING_CHECKS=$(echo "$required_status_checks" | jq -rc '.checks')
+
+        echo "$EXISTING_CHECKS"
         
         # the argjson instead of just arg lets us pass the values not as strings
         jq -n \
@@ -151,7 +153,7 @@ for repository in "${REPOSITORIES[@]}"; do
         --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
         --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
         --argjson requiredStatusChecks $BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS \
-        --argjson existingChecks $EXISTING_CHECKS \
+        --argjson existingChecks "$EXISTING_CHECKS" \
         --arg restrictPushesTeamAllowed $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED \
         '{
             required_status_checks:{
