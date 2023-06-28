@@ -139,9 +139,17 @@ for repository in "${REPOSITORIES[@]}"; do
             -H "Content-Type: application/json" \
             -u ${USERNAME}:${GITHUB_TOKEN} \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_status_checks)
-
-        EXISTING_CHECKS=$(echo "$REQUIRED_STATUS_CHECKS" | jq -rc '.checks')
         
+        EXISTING_CHECKS=$(echo "$REQUIRED_STATUS_CHECKS" | jq -rc '.checks')
+
+        if [ "$EXISTING_CHECKS" == "null" ]; then
+            echo "Check here the reason of there is no existing checks at this branch."
+            echo $( echo "$REQUIRED_STATUS_CHECKS" | jq -c '.message')
+            CURRENT_CHECKS=[]
+        else
+            CURRENT_CHECKS=$EXISTING_CHECKS;
+        fi;
+            
         # the argjson instead of just arg lets us pass the values not as strings
         jq -n \
         --argjson enforceAdmins $BRANCH_PROTECTION_ENFORCE_ADMINS \
@@ -149,7 +157,7 @@ for repository in "${REPOSITORIES[@]}"; do
         --argjson codeOwnerReviews $BRANCH_PROTECTION_CODE_OWNERS \
         --argjson reviewCount $BRANCH_PROTECTION_REQUIRED_REVIEWERS \
         --argjson requiredStatusChecks $BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS \
-        --argjson existingChecks "$EXISTING_CHECKS" \
+        --argjson existingChecks "$CURRENT_CHECKS" \
         --arg restrictPushesTeamAllowed $BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED \
         '{
             required_status_checks:{
