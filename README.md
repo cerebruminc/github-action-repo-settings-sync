@@ -49,6 +49,7 @@ jobs:
           BRANCH_PROTECTION_DISMISS: 'true'
           BRANCH_PROTECTION_CODE_OWNERS: 'true'
           BRANCH_PROTECTION_ENFORCE_ADMINS: 'false'
+          BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS: 'true'
           TOKEN: ${{ secrets.ACTIONS }}
 ```
 ## Parameters
@@ -70,3 +71,4 @@ jobs:
 | BRANCH_PROTECTION_DISMISS | false | true | Dismiss stale pull request approvals when new commits are pushed |
 | BRANCH_PROTECTION_CODE_OWNERS | false | true | Require review from Code Owners |
 | BRANCH_PROTECTION_ENFORCE_ADMINS | false | false | Enforce branch protection rules for repo admins |
+| BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS | false | false | Require all commits pushed to the protected branch to be signed. Only applied when `BRANCH_PROTECTION_ENABLED` is `true`. |

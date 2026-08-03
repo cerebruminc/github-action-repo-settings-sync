@@ -45,6 +45,8 @@ BRANCH_PROTECTION_CODE_OWNERS=$INPUT_BRANCH_PROTECTION_CODE_OWNERS
 echo "BP: Code Owners          : $BRANCH_PROTECTION_CODE_OWNERS"
 BRANCH_PROTECTION_ENFORCE_ADMINS=$INPUT_BRANCH_PROTECTION_ENFORCE_ADMINS
 echo "BP: Enforce Admins       : $BRANCH_PROTECTION_ENFORCE_ADMINS"
+BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS=$INPUT_BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS
+echo "BP: Signed Commits       : $BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS"
 BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS=$INPUT_BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS
 echo "BP: Require Status Checks: $BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS"
 BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED=$INPUT_BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED
@@ -183,6 +185,26 @@ for repository in "${REPOSITORIES[@]}"; do
             -u ${USERNAME}:${GITHUB_TOKEN} \
             --silent \
             ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection
+
+        if [ "$BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS" == "true" ]; then
+            echo "Requiring signed commits on [${BRANCH_PROTECTION_NAME}]"
+            curl \
+                -X POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "Content-Type: application/json" \
+                -u ${USERNAME}:${GITHUB_TOKEN} \
+                --silent \
+                ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_signatures
+        else
+            echo "Allowing unsigned commits on [${BRANCH_PROTECTION_NAME}]"
+            curl \
+                -X DELETE \
+                -H "Accept: application/vnd.github+json" \
+                -H "Content-Type: application/json" \
+                -u ${USERNAME}:${GITHUB_TOKEN} \
+                --silent \
+                ${GITHUB_API_URL}/repos/${repository}/branches/${BRANCH_PROTECTION_NAME}/protection/required_signatures
+        fi
     elif [ "$BRANCH_PROTECTION_ENABLED" == "false" ]; then
         curl \
             -X DELETE \
