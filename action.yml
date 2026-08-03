@@ -65,6 +65,10 @@ inputs:
     description: "Enforce branch protection rules for repo admins"
     required: false
     default: "false"
+  BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS:
+    description: "Require signed commits on the protected branch"
+    required: false
+    default: "false"
   BRANCH_PROTECTION_RESTRICT_PUSHES_TEAM_ALLOWED:
     description: "The team who can push to matching branches"
     required: false
