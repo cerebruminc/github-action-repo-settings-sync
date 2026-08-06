@@ -72,3 +72,21 @@ jobs:
 | BRANCH_PROTECTION_CODE_OWNERS | false | true | Require review from Code Owners |
 | BRANCH_PROTECTION_ENFORCE_ADMINS | false | false | Enforce branch protection rules for repo admins |
 | BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS | false | false | Require all commits pushed to the protected branch to be signed. Only applied when `BRANCH_PROTECTION_ENABLED` is `true`. |
+
+## Testing
+
+The repository exposes its validation commands through the `justfile`:
+
+```bash
+# Metadata/JSON validation, Docker build, and no-network container smoke test
+just test
+
+# Shell lint (currently reports pre-existing findings)
+just shellcheck
+
+# Run every CI target
+just ci
+```
+
+The smoke test uses an empty repository list and an invalid API hostname, so it
+cannot modify GitHub repositories.
