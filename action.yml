@@ -65,6 +65,10 @@ inputs:
     description: "Enforce branch protection rules for repo admins"
     required: false
     default: "false"
+  BRANCH_PROTECTION_REQUIRED_STATUS_CHECKS:
+    description: "Require branches to be up to date before merging when status checks are enabled"
+    required: false
+    default: "false"
   BRANCH_PROTECTION_REQUIRE_SIGNED_COMMITS:
     description: "Require signed commits on the protected branch"
     required: false
